@@ -1,0 +1,54 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    permissions:
+      contents: write
+      packages: write
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 18.x ]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@pikachews'
+
+      - name: Install dependencies
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: yarn install
+
+      - run: yarn build
+
+      - name: "Version Bump"
+        id: version_bump
+        uses: phips28/gh-action-bump-version@v9.1.0
+        with:
+          tag-prefix: 'v'
+          commit-message: '{{version}}'
+          patch-wording: 'patch'
+          minor-wording: 'minor'
+          major-wording: 'major'
+          rc-wording: 'test'
+          skip-tag: ${{ format(github.ref != 'refs/heads/main') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: yarn npm publish
+        if: ${{ steps.version_bump.outputs.newTag != '' || github.ref != 'refs/heads/main' }}
+        env:
+          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,5 +1,5 @@
 {
-  "name": "@imchhh/storybook-addon-relay",
+  "name": "@pikachews/storybook-addon-relay",
   "type": "commonjs",
   "version": "0.0.13",
   "description": "A Storybook add-on to write stories for Relay components.",
@@ -7,7 +7,7 @@
   "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://npm.pkg.github.com"
   },
   "files": [
     "dist",
