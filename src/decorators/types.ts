@@ -19,7 +19,7 @@ type InferMockResolverFieldReturnType<T> = {
     ? FieldResolverReturnType extends Primitive ? FieldResolverReturnType
     : PartialDeep<FieldResolverReturnType, { recurseIntoArrays: true }>
     : never;
-};
+} | null;
 
 export type InferMockResolvers<T> = T extends object ? T extends infer U ? U extends (...args: any[]) => any ? never
     : U extends object ? {
