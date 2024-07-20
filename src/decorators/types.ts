@@ -26,7 +26,7 @@ export type InferMockResolvers<T> = T extends object ? T extends infer U ? U ext
         [K in keyof U]?: (
           context: MockPayloadGenerator.MockResolverContext,
           generateId: () => string,
-        ) => InferMockResolverFieldReturnType<U[K]>;
+        ) => Partial<InferMockResolverFieldReturnType<U[K]>>;
       }
     : never
   : never
